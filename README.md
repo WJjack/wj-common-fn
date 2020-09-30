@@ -10,3 +10,6 @@ import { deepCopy, isEmpty, throttle, debounce, getBase64 } from 'wj-common-fn';
 let a = [1];
 let b = deepCopy(a);
 ```
+
+### github源代码
+<https://github.com/WJjack/wj-common-fn.git>
