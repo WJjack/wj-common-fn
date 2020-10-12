@@ -31,6 +31,7 @@ let b = deepCopy(a);
 | arrayIntersection | 数组的交集，arrayIntersection(arr1: any[], arr2: any[]) | any[] |
 | arrayMinus | 数组的差集 arr1-arr2，arrayMinus(arr1: any[], arr2: any[]) | any[] |
 | arrayUnion | 数组的并集，参数可以使多个，arrayUnion(...args) | any[] |
+| isClass | 是否是类，isClass(obj: any, strict: boolean = true) |  boolean |
 
 
 ### github源代码
