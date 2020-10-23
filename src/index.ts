@@ -335,7 +335,7 @@ export function arrayUnion(...args) {
 
 /**
  * @description 是否是一个类
- * @param obj 
+ * @param obj
  * @param { Boolean } strict 是否严格模式
  * @returns boolean
  */
@@ -343,7 +343,7 @@ export function isClass(obj: any, strict: boolean = true) {
     if (typeof obj !== "function") return false;
 
     var str = obj.toString();
-    
+
     // async function or arrow function
     if (obj.prototype === undefined) return false;
     // generator function or malformed definition
@@ -354,7 +354,7 @@ export function isClass(obj: any, strict: boolean = true) {
     if (Object.getOwnPropertyNames(obj.prototype).length >= 2) return true;
     // anonymous function
     if (/^function\s+\(|^function\s+anonymous\(/.test(str)) return false;
-    // ES5 class without `this` in the body and the name's first character 
+    // ES5 class without `this` in the body and the name's first character
     // upper-cased.
     if (strict && /^function\s+[A-Z]/.test(str)) return true;
     // has `this` in the body
@@ -367,3 +367,238 @@ export function isClass(obj: any, strict: boolean = true) {
 
     return false;
 }
+
+/**
+ * @description 判断是否是正则表达式
+ * @param value
+ * @returns boolean
+ */
+export function isRegExp(value: any): boolean {
+    return Object.prototype.toString.call(value) === "[object RegExp]";
+}
+
+/**
+ * @description 判断是否是日期对象
+ * @param value
+ * @returns boolean
+ */
+export function isDate(value: any): boolean {
+    return Object.prototype.toString.call(value) === "[object Date]";
+}
+
+/**
+ * @description 判断value是否是浏览器内置对象
+ * @param value
+ * @returns boolean
+ */
+export function isNative(value: any): boolean {
+    return typeof value === "function" && /native code/.test(value.toString());
+}
+
+/**
+ * @description cached：记忆函数：缓存函数的运算结果
+ * @param fn (str: any) => any
+ * @returns (str: any) => any
+ */
+export function cached(fn: (str: any) => any) {
+    let cache = Object.create(null);
+    return function cachedFn(str) {
+        let hit = cache[str];
+        return hit || (cache[str] = fn(str));
+    };
+}
+
+/**
+ * @description 横线转驼峰命名
+ * @param str
+ * @returns string
+ */
+export function camelize(str: string): string {
+    const camelizeRE = /-(\w)/g;
+    return str.replace(camelizeRE, function (_, c) {
+        return c ? c.toUpperCase() : "";
+    });
+}
+
+/**
+ * @description 下划线转驼峰命名
+ * @param str
+ * @returns string
+ */
+export function _2camelize(str: string): string {
+    const camelizeRE = /_(\w)/g;
+    return str.replace(camelizeRE, function (_, c) {
+        return c ? c.toUpperCase() : "";
+    });
+}
+
+/**
+ * @description 驼峰命名转横线命名：拆分字符串，使用 - 相连，并且转换为小写
+ * @param str
+ * @returns string
+ */
+export function hyphenate(str: string): string {
+    let hyphenateRE = /\B([A-Z])/g;
+    return str.replace(hyphenateRE, "-$1").toLowerCase();
+}
+
+/**
+ * @description 获取浏览器信息
+ * @returns { type: string; version: number; }
+ */
+export function getExplorerInfo() {
+    let t = navigator.userAgent.toLowerCase();
+    return 0 <= t.indexOf("msie")
+        ? {
+              //ie < 11
+              type: "IE",
+              version: Number(t.match(/msie ([\d]+)/)[1]),
+          }
+        : !!t.match(/trident\/.+?rv:(([\d.]+))/)
+        ? {
+              // ie 11
+              type: "IE",
+              version: 11,
+          }
+        : 0 <= t.indexOf("edge")
+        ? {
+              type: "Edge",
+              version: Number(t.match(/edge\/([\d]+)/)[1]),
+          }
+        : 0 <= t.indexOf("firefox")
+        ? {
+              type: "Firefox",
+              version: Number(t.match(/firefox\/([\d]+)/)[1]),
+          }
+        : 0 <= t.indexOf("chrome")
+        ? {
+              type: "Chrome",
+              version: Number(t.match(/chrome\/([\d]+)/)[1]),
+          }
+        : 0 <= t.indexOf("opera")
+        ? {
+              type: "Opera",
+              version: Number(t.match(/opera.([\d]+)/)[1]),
+          }
+        : 0 <= t.indexOf("Safari")
+        ? {
+              type: "Safari",
+              version: Number(t.match(/version\/([\d]+)/)[1]),
+          }
+        : {
+              type: t,
+              version: -1,
+          };
+}
+
+/**
+ * @description 检测是否为PC端浏览器模式
+ * @returns boolean
+ */
+export function isPCBroswer() {
+    let e = navigator.userAgent.toLowerCase(),
+        t = "ipad" == e.match(/ipad/i)[0],
+        i = "iphone" == e.match(/iphone/i)[0],
+        r = "midp" == e.match(/midp/i)[0],
+        n = "rv:1.2.3.4" == e.match(/rv:1.2.3.4/i)[0],
+        a = "ucweb" == e.match(/ucweb/i)[0],
+        o = "android" == e.match(/android/i)[0],
+        s = "windows ce" == e.match(/windows ce/i)[0],
+        l = "windows mobile" == e.match(/windows mobile/i)[0];
+    return !(t || i || r || n || a || o || s || l);
+}
+
+
+/**
+ * @description base64数据导出文件，文件下载
+ * @param { String } filename 下载后的文件名称
+ * @param { String } data 要下载的base64数据
+ */
+export function downloadFile(filename: string, data: string) {
+    let DownloadLink = document.createElement("a");
+
+    if (DownloadLink) {
+        document.body.appendChild(DownloadLink);
+        DownloadLink.style.display = "none";
+        DownloadLink.download = filename;
+        DownloadLink.href = data;
+
+        if (document.createEvent) {
+            let DownloadEvt = document.createEvent("MouseEvents");
+
+            DownloadEvt.initEvent("click", true, false);
+            DownloadLink.dispatchEvent(DownloadEvt);
+        } else if (typeof DownloadLink.onclick == "function")
+            DownloadLink.onclick.call(this);
+        //   else if ( document.createEventObject )
+        //     DownloadLink.fireEvent('onclick');
+
+        document.body.removeChild(DownloadLink);
+    }
+}
+
+/**
+ * @description 浏览器放大全屏
+ */
+export function toFullScreen() {
+    interface Elem extends HTMLElement, Object {
+        [k: string]: any;
+    }
+    let elem: Elem = document.documentElement || document.body;
+    elem.webkitRequestFullScreen
+        ? elem.webkitRequestFullScreen()
+        : elem.mozRequestFullScreen
+        ? elem.mozRequestFullScreen()
+        : elem.msRequestFullscreen
+        ? elem.msRequestFullscreen()
+        : elem.requestFullScreen
+        ? elem.requestFullScreen()
+        : alert("浏览器不支持全屏");
+}
+
+/**
+ * @description 浏览器退出全屏
+ */
+export function exitFullscreen() {
+    interface Elem extends Document, Object {
+        [k: string]: any;
+    }
+    let elem: Elem = document;
+    elem.webkitCancelFullScreen
+        ? elem.webkitCancelFullScreen()
+        : elem.mozCancelFullScreen
+        ? elem.mozCancelFullScreen()
+        : elem.cancelFullScreen
+        ? elem.cancelFullScreen()
+        : elem.msExitFullscreen
+        ? elem.msExitFullscreen()
+        : elem.exitFullscreen
+        ? elem.exitFullscreen()
+        : alert("切换失败,可尝试Esc退出");
+}
+
+// window动画
+export const requestAnimationFrame =
+    window.requestAnimationFrame ||
+    window.webkitRequestAnimationFrame ||
+    function (callback) {
+        //为了使setTimteout的尽可能的接近每秒60帧的效果
+        window.setTimeout(callback, 1000 / 60);
+    };
+// window.mozRequestAnimationFrame ||
+// window.msRequestAnimationFrame ||
+// window.oRequestAnimationFrame ||
+
+// 取消window动画
+export const cancelAnimationFrame =
+    window.cancelAnimationFrame ||
+    window.webkitCancelAnimationFrame ||
+    function (id) {
+        //为了使setTimteout的尽可能的接近每秒60帧的效果
+        window.clearTimeout(id);
+    };
+
+// window.mozCancelAnimationFrame ||
+// window.msCancelAnimationFrame ||
+// window.oCancelAnimationFrame ||
+

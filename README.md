@@ -13,7 +13,7 @@ let b = deepCopy(a);
 
 ### 函数列表
 
-| 函数名称 | 说明 | 返回 |
+| 函数或属性名称 | 说明 | 返回 |
 | ------- | ---- | ---- |
 | deepCopy | 深度克隆 deepCopy(o: any) | any |
 | isEmpty | 是否为空 isEmpty(val: any) | boolean |
@@ -32,6 +32,20 @@ let b = deepCopy(a);
 | arrayMinus | 数组的差集 arr1-arr2，arrayMinus(arr1: any[], arr2: any[]) | any[] |
 | arrayUnion | 数组的并集，参数可以使多个，arrayUnion(...args) | any[] |
 | isClass | 是否是类，isClass(obj: any, strict: boolean = true) |  boolean |
+| isRegExp | 是否是正则表达式，isRegExp(value: any): boolean | boolean |
+| isDate | 是否是日期对象，isDate(value: any): boolean | boolean |
+| isNative | 是否是浏览器内置对象，isNative(value: any): boolean| boolean |
+| cached | 记忆函数：缓存函数的运算结果，cached(fn: (str: any) => any) | (str: any) => any |
+| camelize | 横线转驼峰命名，camelize(str: string): string | string |
+| _2camelize | 下划线转驼峰命名，_2camelize(str: string): string | string |
+| hyphenate | 驼峰命名转横线命名：拆分字符串，使用 - 相连，并且转换为小写，hyphenate(str: string): string | string |
+| getExplorerInfo | 获取浏览器信息，getExplorerInfo() | { type: string; version: number; } |
+| isPCBroswer | 检测是否为PC端浏览器模式，isPCBroswer() | boolean |
+| downloadFile | base64数据导出文件，文件下载，downloadFile(filename: string, data: string) | void |
+| toFullScreen | 浏览器放大全屏，toFullScreen() | void |
+| exitFullscreen | 浏览器退出全屏，exitFullscreen() | void |
+| requestAnimationFrame | window动画，requestAnimationFrame是一个常量函数 | none |
+| cancelAnimationFrame | 取消window动画，cancelAnimationFrame是一个常量函数 | none |
 
 
 ### github源代码
