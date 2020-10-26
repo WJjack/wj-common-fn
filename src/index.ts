@@ -603,3 +603,5 @@ export const cancelAnimationFrame =
 // window.oCancelAnimationFrame ||
 
 export const test1 = 333;
+export const aa = 1;
+export const bb = 2;
