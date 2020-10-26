@@ -335,7 +335,7 @@ export function arrayUnion(...args) {
 
 /**
  * @description 是否是一个类
- * @param obj
+ * @param obj 
  * @param { Boolean } strict 是否严格模式
  * @returns boolean
  */
@@ -343,7 +343,7 @@ export function isClass(obj: any, strict: boolean = true) {
     if (typeof obj !== "function") return false;
 
     var str = obj.toString();
-
+    
     // async function or arrow function
     if (obj.prototype === undefined) return false;
     // generator function or malformed definition
@@ -354,7 +354,7 @@ export function isClass(obj: any, strict: boolean = true) {
     if (Object.getOwnPropertyNames(obj.prototype).length >= 2) return true;
     // anonymous function
     if (/^function\s+\(|^function\s+anonymous\(/.test(str)) return false;
-    // ES5 class without `this` in the body and the name's first character
+    // ES5 class without `this` in the body and the name's first character 
     // upper-cased.
     if (strict && /^function\s+[A-Z]/.test(str)) return true;
     // has `this` in the body
@@ -601,8 +601,3 @@ export const cancelAnimationFrame =
 // window.mozCancelAnimationFrame ||
 // window.msCancelAnimationFrame ||
 // window.oCancelAnimationFrame ||
-
-export const test2 = 666;
-export const b = 1;
-export const a = 2;
-export const aa = 1212;
