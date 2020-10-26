@@ -602,6 +602,7 @@ export const cancelAnimationFrame =
 // window.msCancelAnimationFrame ||
 // window.oCancelAnimationFrame ||
 
-export const test1 = 333;
-export const aa = 1;
-export const bb = 2;
+export const test2 = 666;
+export const b = 1;
+export const a = 2;
+export const aa = 1212;
