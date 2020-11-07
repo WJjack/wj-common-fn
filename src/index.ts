@@ -335,7 +335,7 @@ export function arrayUnion(...args) {
 
 /**
  * @description 是否是一个类
- * @param obj 
+ * @param obj
  * @param { Boolean } strict 是否严格模式
  * @returns boolean
  */
@@ -343,7 +343,7 @@ export function isClass(obj: any, strict: boolean = true) {
     if (typeof obj !== "function") return false;
 
     var str = obj.toString();
-    
+
     // async function or arrow function
     if (obj.prototype === undefined) return false;
     // generator function or malformed definition
@@ -354,7 +354,7 @@ export function isClass(obj: any, strict: boolean = true) {
     if (Object.getOwnPropertyNames(obj.prototype).length >= 2) return true;
     // anonymous function
     if (/^function\s+\(|^function\s+anonymous\(/.test(str)) return false;
-    // ES5 class without `this` in the body and the name's first character 
+    // ES5 class without `this` in the body and the name's first character
     // upper-cased.
     if (strict && /^function\s+[A-Z]/.test(str)) return true;
     // has `this` in the body
@@ -508,7 +508,6 @@ export function isPCBroswer() {
     return !(t || i || r || n || a || o || s || l);
 }
 
-
 /**
  * @description base64数据导出文件，文件下载
  * @param { String } filename 下载后的文件名称
@@ -601,3 +600,107 @@ export const cancelAnimationFrame =
 // window.mozCancelAnimationFrame ||
 // window.msCancelAnimationFrame ||
 // window.oCancelAnimationFrame ||
+
+/**
+ * @description 实现将项目的图片路径转化成base64
+ * @param { String } img 图片路径
+ * @returns Promise<unknown>
+ */
+export function getBase64ByUrl(img: string) {
+    // 传入图片路径，返回base64
+    return new Promise((resolve, reject) => {
+        let picImage = new Image();
+        if (img) {
+            picImage.onload = function () {
+                resolve(getBase64Image(picImage)); // 将base64传给done上传处理
+            };
+            picImage.src = img;
+        } else {
+            reject("图片路径不存在");
+        }
+    });
+}
+
+/**
+ * @description 将DOM元素img转换为base4的主要方法
+ * @param { HTMLImageElement } img DOM元素img
+ * @param { Number } width
+ * @param { Number } height
+ * @returns { String }  base64
+ */
+export function getBase64Image(
+    img: HTMLImageElement,
+    width?: number,
+    height?: number
+) {
+    let canvas = document.createElement("canvas");
+    canvas.width = width || img.width;
+    canvas.height = height || img.height;
+    let ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    let dataURL = canvas.toDataURL();
+    return dataURL;
+}
+
+/**
+ * @description base64转Blob
+ * @param { String } base64
+ * @returns { Blob }
+ */
+export function convertBase64ToBlob(base64: string) {
+    var base64Arr = base64.split(",");
+    var imgtype = "";
+    var base64String = "";
+    if (base64Arr.length > 1) {
+        // 如果是图片base64，去掉头信息
+        base64String = base64Arr[1];
+        imgtype = base64Arr[0].substring(
+            base64Arr[0].indexOf(":") + 1,
+            base64Arr[0].indexOf(";")
+        );
+    }
+    // 将base64解码，atob() 方法用于解码使用 base-64 编码的字符串。
+    var bytes = atob(base64String);
+    var bytesCode = new ArrayBuffer(bytes.length);
+    // 转换为类型化数组
+    var byteArray = new Uint8Array(bytesCode);
+    // 将base64转换为ascii码
+    for (var i = 0; i < bytes.length; i++) {
+        byteArray[i] = bytes.charCodeAt(i);
+    }
+    // 生成Blob对象（文件对象）
+    return new Blob([bytesCode], { type: imgtype });
+}
+
+/**
+ * @description 将图片路径转换成file文件类型
+ * @param { String } url 图片路径
+ * @param { String } name 转换后的图片名称
+ * @returns { Promise<unknown> }
+ */
+export function toFileByUrl(url: string, name?: string) {
+    return new Promise((resolve, reject) => {
+        getBase64ByUrl(url)
+            .then((base64: string) => {
+                resolve(
+                    new File(
+                        [convertBase64ToBlob(base64)],
+                        name || "anonymous.png"
+                    )
+                );
+            })
+            .catch((err) => {
+                reject(err || "转换失败");
+            });
+    });
+}
+
+/**
+ * @description 判断是否是json数据
+ * @param { any } obj 
+ * @returns { Boolean }
+ */
+export function isJson(obj) {
+    var isjson = typeof (obj) == "object"  && Object.prototype.toString.call(obj).toLowerCase() == "[object object]"  && !obj.length;
+    return  isjson;
+  }

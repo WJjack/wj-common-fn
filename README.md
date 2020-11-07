@@ -32,6 +32,11 @@ let b = deepCopy(a);
 | arrayMinus | 数组的差集 arr1-arr2，arrayMinus(arr1: any[], arr2: any[]) | any[] |
 | arrayUnion | 数组的并集，参数可以使多个，arrayUnion(...args) | any[] |
 | isClass | 是否是类，isClass(obj: any, strict: boolean = true) |  boolean |
+| getBase64ByUrl | 实现将项目的图片路径转化成base64，getBase64ByUrl(img: string) | Promise<unknown> |
+| getBase64Image |将DOM元素img转换为base4的主要方法，getBase64Image(img: HTMLImageElement,width?: number,height?:number) | string |
+| convertBase64ToBlob | base64转Blob，convertBase64ToBlob(base64: string) | Blob |
+| toFileByUrl | 将图片路径转换成file文件类型，toFileByUrl(url: string, name?: string) | Promise<unknown> |
+| isJson | 判断是否是json数据，isJson(obj) | boolean |
 
 
 ### github源代码
