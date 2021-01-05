@@ -37,6 +37,17 @@ let b = deepCopy(a);
 | convertBase64ToBlob | base64转Blob，convertBase64ToBlob(base64: string) | Blob |
 | toFileByUrl | 将图片路径转换成file文件类型，toFileByUrl(url: string, name?: string) | Promise<unknown> |
 | isJson | 判断是否是json数据，isJson(obj) | boolean |
+| hideElements | 隐藏制定的所有元素，hideElements(...el: HTMLElementTagNameMap[keyof HTMLElementTagNameMap][]) | void |
+| hasClassName | 元素是否具有指定的类，hasClassName(el:  HTMLElementTagNameMap[keyof HTMLElementTagNameMap], className: string) | boolean |
+| getScrollPosition | 获取当前页面的滚动位置，getScrollPosition(el: any | Window = window) | { x: any, y: any } |
+| scrollToTop | 滚动到顶部，scrollToTop() | void |
+| elementContains | 父元素是否包含子元素，elementContains(parent:  HTMLElementTagNameMap[keyof HTMLElementTagNameMap], child:  HTMLElementTagNameMap[keyof HTMLElementTagNameMap]) | boolean |
+| elementIsVisibleInViewport | 指定元素是否在视口可见，elementIsVisibleInViewport(el: HTMLElementTagNameMap[keyof HTMLElementTagNameMap], partiallyVisible = false) | boolean |
+| detectDeviceType | 分辨设备是移动设备还是桌面设备，detectDeviceType() | "Mobile" or "Desktop" |
+| getURLParameters | 获取当前 URL参数的对象，getURLParameters(url: string) | {} |
+| getDaysDiffBetweenDates| 获取两个日期之间的天数间隔，getDaysDiffBetweenDates(dateInitial: number, dateFinal: number) | number |
+| counter | 为指定选择器创建具有指定范围、步长和持续时间的计时器，counter(selector: string, start: number, end: number, step = 1, duration = 2000) | NodeJS.Timeout |
+| copyToClipboard | 将一个字符串复制到剪贴板，copyToClipboard(str: string) | void |
 
 
 ### github源代码

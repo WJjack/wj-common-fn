@@ -697,10 +697,145 @@ export function toFileByUrl(url: string, name?: string) {
 
 /**
  * @description 判断是否是json数据
- * @param { any } obj 
+ * @param { any } obj
  * @returns { Boolean }
  */
 export function isJson(obj) {
     var isjson = typeof (obj) == "object"  && Object.prototype.toString.call(obj).toLowerCase() == "[object object]"  && !obj.length;
     return  isjson;
-  }
+}
+
+/**
+ * @description 隐藏制定的所有元素
+ * @param el
+ * @returns void
+ */
+export function hideElements(...el: HTMLElementTagNameMap[keyof HTMLElementTagNameMap][]) {
+    [...el].forEach(e => (e.style.display = "none"));
+}
+
+/**
+ * @description 元素是否具有指定的类
+ * @param el
+ * @param className
+ * @returns { boolean }
+ */
+export function hasClassName(el:  HTMLElementTagNameMap[keyof HTMLElementTagNameMap], className: string) {
+    return el.classList.contains(className);
+}
+
+/**
+ * @description 获取当前页面的滚动位置
+ * @param { HTMLElement } el dom元素
+ * @returns { x: any, y: any }
+ */
+export function getScrollPosition(el: any | Window = window) {
+    return {
+        x: el.pageXOffset !== undefined ? el.pageXOffset : el.scrollLeft,
+        y: el.pageYOffset !== undefined ? el.pageYOffset : el.scrollTop
+    }
+}
+
+/**
+ * @description 滚动到顶部
+ * @returns { void }
+ */
+export function scrollToTop() {
+    const c = document.documentElement.scrollTop || document.body.scrollTop;     
+    if (c > 0) {         
+        window.requestAnimationFrame(scrollToTop);         
+        window.scrollTo(0, c - c / 8);     
+    } 
+}
+
+/**
+ * @description 父元素是否包含子元素
+ * @param { HTMLElementTagNameMap[keyof HTMLElementTagNameMap] } parent 父级元素
+ * @param { HTMLElementTagNameMap[keyof HTMLElementTagNameMap] } child 子元素
+ * @returns { boolean }
+ */
+export function elementContains(parent:  HTMLElementTagNameMap[keyof HTMLElementTagNameMap], child:  HTMLElementTagNameMap[keyof HTMLElementTagNameMap]) {
+    return parent !== child && parent.contains(child);
+}
+
+/**
+ * @description 指定元素是否在视口可见
+ * @param { HTMLElementTagNameMap[keyof HTMLElementTagNameMap] } el 
+ * @param { boolean } partiallyVisible
+ * @returns { boolean }
+ */
+export function elementIsVisibleInViewport(el: HTMLElementTagNameMap[keyof HTMLElementTagNameMap], partiallyVisible = false) {
+    const { top, left, bottom, right } = el.getBoundingClientRect();
+    const { innerHeight, innerWidth } = window;
+    return partiallyVisible ? ((top > 0 && top < innerHeight) || (bottom > 0 && bottom < innerHeight)) && ((left > 0 && left < innerWidth) || (right > 0 && right < innerWidth)) : top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth; 
+}
+
+/**
+ * @description 分辨设备是移动设备还是桌面设备
+ * @returns { "Mobile" | "Desktop" }
+ */
+export function detectDeviceType() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? "Mobile" : "Desktop"; 
+}
+
+/**
+ * @description 获取当前 URL参数的对象
+ * @param { String } url 地址
+ * @returns { {} }
+ */
+export function getURLParameters(url: string) {
+    return (url.match(/([^?=&]+)(=([^&]*))/g) || []).reduce((a, v) => ((a[v.slice(0, v.indexOf('='))] = v.slice(v.indexOf('=') + 1)), a), {});
+}
+
+/**
+ * @description 获取两个日期之间的天数间隔
+ * @param { number } dateInitial 
+ * @param { number } dateFinal 
+ * @returns { number }
+ */
+export function getDaysDiffBetweenDates(dateInitial: number, dateFinal: number) {
+    return (dateFinal - dateInitial) / (1000 * 3600 * 24);
+}
+
+/**
+ * @description 为指定选择器创建具有指定范围、步长和持续时间的计时器
+ * @param { number } selector 选择器
+ * @param { number } start 开始数字
+ * @param { number } end 结束数字
+ * @param { number } step 步长
+ * @param { number } duration 持续时间，毫秒
+ * @returns { NodeJS.Timeout }
+ */
+export function counter(selector: string, start: number, end: number, step = 1, duration = 2000) {
+    let current = start,     
+    _step = (end - start) * step < 0 ? -step : step,     
+    timer = setInterval(() => {         
+        current += _step;         
+        document.querySelector(selector).innerHTML = current + "";         
+        if (current >= end) document.querySelector(selector).innerHTML = end + "";         
+        if (current >= end) clearInterval(timer);     
+    }, Math.abs(Math.floor(duration / (end - start))));     
+    return timer;
+}
+
+/**
+ * @description 将一个字符串复制到剪贴板
+ * @param { string } str 
+ * @returns { void }
+ */
+export function copyToClipboard(str: string) {
+    const el = document.createElement('textarea');     
+    el.value = str;     
+    el.setAttribute('readonly', '');     
+    el.style.position = 'absolute';     
+    el.style.left = '-9999px';     
+    document.body.appendChild(el);     
+    const selected = document.getSelection().rangeCount > 0 ? document.getSelection().getRangeAt(0) : false;     
+    el.select();     
+    document.execCommand('copy');     
+    document.body.removeChild(el);     
+    if (selected) {         
+        document.getSelection().removeAllRanges();         
+        document.getSelection().addRange(selected);     
+    } 
+}
