@@ -614,6 +614,7 @@ export function getBase64ByUrl(img: string) {
             picImage.onload = function () {
                 resolve(getBase64Image(picImage)); // 将base64传给done上传处理
             };
+            picImage.crossOrigin = "Anonymous"; // 解决图片跨域问题，注意存放顺序
             picImage.src = img;
         } else {
             reject("图片路径不存在");
@@ -741,11 +742,11 @@ export function getScrollPosition(el: any | Window = window) {
  * @returns { void }
  */
 export function scrollToTop() {
-    const c = document.documentElement.scrollTop || document.body.scrollTop;     
-    if (c > 0) {         
-        window.requestAnimationFrame(scrollToTop);         
-        window.scrollTo(0, c - c / 8);     
-    } 
+    const c = document.documentElement.scrollTop || document.body.scrollTop;
+    if (c > 0) {
+        window.requestAnimationFrame(scrollToTop);
+        window.scrollTo(0, c - c / 8);
+    }
 }
 
 /**
@@ -760,14 +761,14 @@ export function elementContains(parent:  HTMLElementTagNameMap[keyof HTMLElement
 
 /**
  * @description 指定元素是否在视口可见
- * @param { HTMLElementTagNameMap[keyof HTMLElementTagNameMap] } el 
+ * @param { HTMLElementTagNameMap[keyof HTMLElementTagNameMap] } el
  * @param { boolean } partiallyVisible
  * @returns { boolean }
  */
 export function elementIsVisibleInViewport(el: HTMLElementTagNameMap[keyof HTMLElementTagNameMap], partiallyVisible = false) {
     const { top, left, bottom, right } = el.getBoundingClientRect();
     const { innerHeight, innerWidth } = window;
-    return partiallyVisible ? ((top > 0 && top < innerHeight) || (bottom > 0 && bottom < innerHeight)) && ((left > 0 && left < innerWidth) || (right > 0 && right < innerWidth)) : top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth; 
+    return partiallyVisible ? ((top > 0 && top < innerHeight) || (bottom > 0 && bottom < innerHeight)) && ((left > 0 && left < innerWidth) || (right > 0 && right < innerWidth)) : top >= 0 && left >= 0 && bottom <= innerHeight && right <= innerWidth;
 }
 
 /**
@@ -775,7 +776,7 @@ export function elementIsVisibleInViewport(el: HTMLElementTagNameMap[keyof HTMLE
  * @returns { "Mobile" | "Desktop" }
  */
 export function detectDeviceType() {
-    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? "Mobile" : "Desktop"; 
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ? "Mobile" : "Desktop";
 }
 
 /**
@@ -789,8 +790,8 @@ export function getURLParameters(url: string) {
 
 /**
  * @description 获取两个日期之间的天数间隔
- * @param { number } dateInitial 
- * @param { number } dateFinal 
+ * @param { number } dateInitial
+ * @param { number } dateFinal
  * @returns { number }
  */
 export function getDaysDiffBetweenDates(dateInitial: number, dateFinal: number) {
@@ -807,35 +808,38 @@ export function getDaysDiffBetweenDates(dateInitial: number, dateFinal: number) 
  * @returns { NodeJS.Timeout }
  */
 export function counter(selector: string, start: number, end: number, step = 1, duration = 2000) {
-    let current = start,     
-    _step = (end - start) * step < 0 ? -step : step,     
-    timer = setInterval(() => {         
-        current += _step;         
-        document.querySelector(selector).innerHTML = current + "";         
-        if (current >= end) document.querySelector(selector).innerHTML = end + "";         
-        if (current >= end) clearInterval(timer);     
-    }, Math.abs(Math.floor(duration / (end - start))));     
+    let current = start,
+    _step = (end - start) * step < 0 ? -step : step,
+    timer = setInterval(() => {
+        current += _step;
+        document.querySelector(selector).innerHTML = current + "";
+        if (current >= end) document.querySelector(selector).innerHTML = end + "";
+        if (current >= end) clearInterval(timer);
+    }, Math.abs(Math.floor(duration / (end - start))));
     return timer;
 }
 
 /**
  * @description 将一个字符串复制到剪贴板
- * @param { string } str 
- * @returns { void }
+ * @param { string } str
+ * @returns { Promise<unkown> }
  */
 export function copyToClipboard(str: string) {
-    const el = document.createElement('textarea');     
-    el.value = str;     
-    el.setAttribute('readonly', '');     
-    el.style.position = 'absolute';     
-    el.style.left = '-9999px';     
-    document.body.appendChild(el);     
-    const selected = document.getSelection().rangeCount > 0 ? document.getSelection().getRangeAt(0) : false;     
-    el.select();     
-    document.execCommand('copy');     
-    document.body.removeChild(el);     
-    if (selected) {         
-        document.getSelection().removeAllRanges();         
-        document.getSelection().addRange(selected);     
-    } 
+    const el = document.createElement('textarea');
+    el.value = str;
+    el.setAttribute('readonly', '');
+    el.style.position = 'absolute';
+    el.style.left = '-9999px';
+    document.body.appendChild(el);
+    const selected = document.getSelection().rangeCount > 0 ? document.getSelection().getRangeAt(0) : false;
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
+    if (selected) {
+        document.getSelection().removeAllRanges();
+        document.getSelection().addRange(selected);
+        return Promise.resolve();
+    } else {
+        return Promise.reject();
+    }
 }
